@@ -167,36 +167,6 @@ Student {
 
 ---
 
-## Team & Libraries
-
-Pembagian kerja untuk **6 orang** (masing-masing mengerjakan fitur + memakai library relevan):
-
-1. **A – UI/Theme/Settings**
-   `app_theme.dart`, `theme_provider.dart`, `profile_page.dart`
-   *Libraries*: `provider`, `shared_preferences`, `google_fonts`
-
-2. **B – Notifications**
-   `services/notification_service.dart`, integrasi di `home_shell.dart`
-   *Libraries*: `flutter_local_notifications`
-
-3. **C – QR Attendance**
-   `scan_page.dart`, hook ke `data_provider.dart`
-   *Libraries*: `qr_code_scanner`, `provider`
-
-4. **D – Language/Prefs**
-   `language_page.dart`, `data_provider.dart`
-   *Libraries*: `shared_preferences`, `provider`
-
-5. **E – Edit Account & Forms**
-   `edit_account_page.dart` (form sederhana)
-   *Libraries*: (native Flutter widgets)
-
-6. **F – Rekap, BAP, Bookmarks**
-   `attendance_recap_page.dart`, `bap_page.dart`, `bookmarks_page.dart`
-   *Libraries*: `provider`, `shared_preferences`
-
----
-
 ## Contributing
 
 1. Buat branch dari `main` (mis. `feature/qr-scan`)
@@ -224,27 +194,3 @@ Pembagian kerja untuk **6 orang** (masing-masing mengerjakan fitur + memakai lib
 MIT © 2025 CORELASI Team
 
 ---
-
-### Screenshots (optional)
-
-Letakkan gambar ke folder `screenshots/` dan tampilkan di sini:
-
-```
-screenshots/
-  home.png
-  scan.png
-  profile.png
-  recap.png
-  bap.png
-```
-
-Contoh embed:
-
-```md
-![Home](screenshots/home.png)
-![Scan](screenshots/scan.png)
-```
-
----
-
-> Pengen *badge* CI/CD, release, atau coverage? Nanti bisa kita tambahkan GitHub Actions workflow sesuai kebutuhan.
