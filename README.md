@@ -161,25 +161,16 @@ Student {
 
 ---
 
-## Contributing
-
-1. Buat branch dari `main` (mis. `feature/qr-scan`)
-2. Commit kecil & jelas, sertakan deskripsi
-3. Buka Pull Request + screenshot/rekaman fitur
-4. Review minimal 1 rekan tim sebelum merge
-
----
-
 ## FAQ
 
-**Q:** Kenapa data hilang saat reinstall?
-**A:** Disimpan lokal (`SharedPreferences`). Untuk persist lebih kuat/sync multi-device, pakai DB lokal (Hive/Isar) atau backend.
+**Q:** Kenapa data hilang saat reinstall? <br>
+**D:** Disimpan lokal (`SharedPreferences`). Untuk persist lebih kuat/sync multi-device, pakai DB lokal (Hive/Isar) atau backend.
 
-**Q:** QR tidak terbaca?
-**A:** Pastikan izin kamera aktif. Format harus `NIS|NAMA`. Coba perbesar/terangi QR.
+**Q:** QR tidak terbaca? <br>
+**D:** Pastikan izin kamera aktif. Format harus `NIS|NAMA`. Coba perbesar/terangi QR.
 
-**Q:** Notifikasi tidak tampil?
-**A:** Cek izin notifikasi OS. Di iOS, notifikasi perlu izin user; di Android 13+ juga.
+**Q:** Notifikasi tidak tampil? <br>
+**D:** Cek izin notifikasi OS. Di iOS, notifikasi perlu izin user; di Android 13+ juga.
 
 ---
 
