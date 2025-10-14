@@ -1,12 +1,6 @@
-Here’s a clean, copy-paste-ready **README.md** for your GitHub repo. It matches the simplified Flutter app we just built (3-tab bottom nav, notification icon on AppBar, QR attendance, BAP, Settings).
-
----
-
 # CORELASI (Flutter)
 
 Aplikasi mobile sederhana untuk **presensi siswa berbasis QR**, **rekap kehadiran**, dan **BAP (Berita Acara Pembelajaran)**, dilengkapi **Settings** (Dark Mode, Language, Edit Account, Bookmarks, Privacy & Help) dan **ikon notifikasi** di kanan atas AppBar.
-
-![CORELASI](assets/logo.png)
 
 <p align="center">
   <a href="https://flutter.dev">Flutter</a> ·
