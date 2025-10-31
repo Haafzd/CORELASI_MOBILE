@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'screens/setting_page.dart';
+import 'routes/app_routes.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,12 +11,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: AppRoutes.editAccount,
+      routes: AppRoutes.routes,
     );
   }
 }
