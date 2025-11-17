@@ -25,7 +25,8 @@ class DataPresensiPage extends StatelessWidget {
 
             return Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: maxW),
                   child: Column(
@@ -58,7 +59,8 @@ class DataPresensiPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         child: _buildTable(context),
                       ),
 
@@ -74,7 +76,8 @@ class DataPresensiPage extends StatelessWidget {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFD1D5DB), // abu terang
+                            backgroundColor:
+                                const Color(0xFFD1D5DB), // abu terang
                             foregroundColor: Colors.black,
                             elevation: 0,
                             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -154,14 +157,16 @@ class DataPresensiPage extends StatelessWidget {
             children: [
               _cell(
                 child: Text(row["nama"]!, style: cellStyle),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                 // Teks rapi & selaras tengah vertikal sudah dari Table
                 // Untuk horizontal rapi kiri
                 align: Alignment.centerLeft,
               ),
               _cell(
                 child: Text(row["status"]!, style: cellStyle),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                 align: Alignment.centerLeft,
               ),
             ],
