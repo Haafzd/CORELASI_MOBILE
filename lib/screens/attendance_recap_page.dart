@@ -1,185 +1,252 @@
 import 'package:flutter/material.dart';
+import '../color.dart';
 
-class DataPresensiPage extends StatelessWidget {
-  const DataPresensiPage({super.key});
+class AttendanceRecapScreen extends StatelessWidget {
+  AttendanceRecapScreen({super.key});
 
-  // Contoh data
-  List<Map<String, String>> get _data => const [
-        {"nama": "Ababil", "status": "Hadir"},
-        {"nama": "Gilang", "status": "Sakit"},
-        {"nama": "Patli", "status": "-"},
-        {"nama": "Asuy", "status": "Izin"},
-      ];
+  // dummy data siswa
+  final List<Map<String, String>> students = [
+  {'name': 'Hafidz Musyafa Azmi', 'status': 'Tidak hadir'}, 
+  {'name': 'Gilang Tirta Kusuma', 'status': 'Hadir'},       
+  {'name': 'Fadli Muhammad Dzaky', 'status': 'Hadir'},      
+  {'name': 'Haafidz Alhabib Azwir', 'status': 'Hadir'},     
+  {'name': 'Muhammad Thoriq Marcello', 'status': 'Hadir'},  
+  {'name': 'Muhammad Reza Ferdinal', 'status': 'Hadir'},    
+  {'name': 'Pieter Immanuel Sinaga', 'status': 'Hadir'},    
+  {'name': 'Muhammad Ilham Ridzuan', 'status': 'Hadir'},    
+  {'name': 'Avriela Nada Amara P', 'status': 'Hadir'},      
+  {'name': 'Nadya Sekar Rahmawati', 'status': 'Hadir'},     
+  {'name': 'Kyreina Oktaria Putri', 'status': 'Hadir'},     
+  {'name': 'Alfian Rizky Sabian', 'status': 'Hadir'},       
+  {'name': 'Raihan Ahmad Fadhilah', 'status': 'Hadir'},     
+  {'name': 'Salsabila Nur Azzahra', 'status': 'Hadir'},     
+  {'name': 'Iqbal Faqih Ramadhan', 'status': 'Hadir'},      
+  {'name': 'Farrel Dwi Pratama', 'status': 'Hadir'},        
+  {'name': 'Dinda Maharani Putri', 'status': 'Hadir'},      
+  {'name': 'Zahra Khairunnisa', 'status': 'Hadir'},        
+  {'name': 'Rafli Maulana Akbar', 'status': 'Hadir'},       
+  {'name': 'Bella Citra Ayuningtyas', 'status': 'Hadir'},   
+  {'name': 'Rizky Ananda Putra', 'status': 'Hadir'},        
+  {'name': 'Azka Rafi Alamsyah', 'status': 'Hadir'},        
+  {'name': 'Putri Aulia Rahma', 'status': 'Hadir'},         
+  {'name': 'Noval Dwi Kusuma', 'status': 'Hadir'},          
+  {'name': 'Silvia Agustin', 'status': 'Hadir'},            
+];
+
 
   @override
   Widget build(BuildContext context) {
-    final bg = const Color(0xFFF3F4F6); // #f3f4f6
-
     return Scaffold(
-      backgroundColor: bg,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            // Biar nyaman di device lebar
-            final maxW = constraints.maxWidth > 640 ? 560.0 : double.infinity;
-
-            return Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: maxW),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Judul
-                      Text(
-                        "DATA PRESENSI",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.5,
-                          color: Colors.black.withOpacity(0.9),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Card putih
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x1A000000), // ~10% hitam
-                              blurRadius: 18,
-                              spreadRadius: 1,
-                              offset: Offset(0, 8),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        child: _buildTable(context),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Tombol Kembali
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (Navigator.of(context).canPop()) {
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFD1D5DB), // abu terang
-                            foregroundColor: Colors.black,
-                            elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            textStyle: const TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16,
-                            ),
-                          ),
-                          child: const Text("Kembali"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: const BackButton(),
+        title: Text(
+          'Rekap Absensi',
+          style: TextStyle(
+            color: AppColors.textDarkBlue,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
-    );
-  }
-
-  Widget _buildTable(BuildContext context) {
-    final headerStyle = TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w700,
-      color: Colors.black.withOpacity(0.85),
-    );
-
-    final cellStyle = TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
-      color: Colors.black.withOpacity(0.85),
-    );
-
-    // Gunakan Table agar mudah buat garis vertikal & alignment
-    return Table(
-      // Garis pembatas vertikal di antara dua kolom
-      border: TableBorder(
-        verticalInside: BorderSide(color: Colors.grey.shade300, width: 1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      columnWidths: const {
-        0: FlexColumnWidth(2), // Nama Siswa (lebih lebar)
-        1: FlexColumnWidth(1), // Status
-      },
-      children: [
-        // Header
-        TableRow(
-          decoration: BoxDecoration(
-            // Garis horizontal tipis di bawah header
-            border: Border(
-              bottom: BorderSide(color: Colors.grey.shade300, width: 1),
-            ),
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _cell(
-              child: Text("Nama Siswa", style: headerStyle),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-              align: Alignment.centerLeft,
+            // tanggal
+            const Text(
+              'Selasa , 04 Maret 2025',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey,
+              ),
             ),
-            _cell(
-              child: Text("Status", style: headerStyle),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-              align: Alignment.centerLeft,
+            const SizedBox(height: 16),
+
+            // judul + 3 kotak rekap
+            Text(
+              'Rekap Presensi Kehadiran Siswa',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textDarkBlue,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: const [
+                _SummaryBox(label: 'Total', value: '25'),
+                SizedBox(width: 8),
+                _SummaryBox(label: 'Hadir', value: '24'),
+                SizedBox(width: 8),
+                _SummaryBox(label: 'tidak hadir', value: '1'),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // BOX: Daftar siswa + list
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // header "Daftar Siswa" DI DALAM box
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      child: Text(
+                        'Daftar Siswa',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textDarkBlue,
+                        ),
+                      ),
+                    ),
+                    Divider(height: 1, color: Colors.grey.shade300),
+
+                    // list siswa
+                    Expanded(
+                      child: ListView.separated(
+                        itemCount: students.length,
+                        separatorBuilder: (_, __) => Divider(
+                          height: 1,
+                          color: Colors.grey.shade200,
+                        ),
+                        itemBuilder: (context, index) {
+                          final student = students[index];
+                          final isPresent = student['status']!
+                                  .toLowerCase()
+                                  .contains('hadir') &&
+                              !student['status']!
+                                  .toLowerCase()
+                                  .contains('tidak');
+
+                          return Container(
+                            color: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    student['name']!,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                _StatusChip(
+                                  isPresent: isPresent,
+                                  primaryBlue: AppColors.primaryBlue,
+                                  textDarkBlue: AppColors.textDarkBlue,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
-
-        // Data rows
-        ..._data.map((row) {
-          return TableRow(
-            children: [
-              _cell(
-                child: Text(row["nama"]!, style: cellStyle),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                // Teks rapi & selaras tengah vertikal sudah dari Table
-                // Untuk horizontal rapi kiri
-                align: Alignment.centerLeft,
-              ),
-              _cell(
-                child: Text(row["status"]!, style: cellStyle),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                align: Alignment.centerLeft,
-              ),
-            ],
-          );
-        }),
-      ],
+      ),
     );
   }
+}
 
-  Widget _cell({
-    required Widget child,
-    EdgeInsetsGeometry padding = EdgeInsets.zero,
-    AlignmentGeometry align = Alignment.centerLeft,
-  }) {
+/// Kotak kecil: Total / Hadir / tidak hadir
+class _SummaryBox extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _SummaryBox({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Chip Hadir / Tidak hadir persegi tumpul kecil
+class _StatusChip extends StatelessWidget {
+  final bool isPresent;
+  final Color primaryBlue;
+  final Color textDarkBlue;
+
+  const _StatusChip({
+    required this.isPresent,
+    required this.primaryBlue,
+    required this.textDarkBlue,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bgColor = isPresent ? primaryBlue : Colors.white;
+    final borderColor = isPresent ? primaryBlue : textDarkBlue;
+    final textColor = isPresent ? Colors.white : textDarkBlue;
+    final label = isPresent ? 'Hadir' : 'Tidak hadir';
+
     return Container(
-      alignment: align,
-      padding: padding,
-      child: child,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(4), // kecil, bukan pill
+        border: Border.all(color: borderColor),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: textColor,
+        ),
+      ),
     );
   }
 }
