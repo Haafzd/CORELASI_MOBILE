@@ -105,7 +105,7 @@ class _AttendanceState extends State<Attendance> {
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              "${liveDate}",
+              liveDate,
               style: TextStyle(
                   color: Colors.grey,
                   fontSize: 14,
