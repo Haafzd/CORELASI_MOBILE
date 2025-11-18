@@ -42,7 +42,6 @@ class _NotificationScreenState extends State<NotificationScreen>
         ],
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-
       body: Column(
         children: [
           const SizedBox(height: 8),
@@ -54,7 +53,7 @@ class _NotificationScreenState extends State<NotificationScreen>
               labelColor: Colors.white,
               unselectedLabelColor: Colors.black,
               indicator: BoxDecoration(
-                color: Colors.blue,
+                color: Color.fromARGB(255, 0, 46, 110),
                 borderRadius: BorderRadius.circular(12),
               ),
               tabs: const [
@@ -82,14 +81,15 @@ class _NotificationScreenState extends State<NotificationScreen>
     );
   }
 
-  //  TAMPILAN TAB: SEMUA 
+  //  TAMPILAN TAB: SEMUA
   Widget _buildAllNotifications() {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: const [
         NotifCard(
           title: "Presensi Berhasil",
-          subtitle: "Kamu berhasil presensi untuk mata pelajaran Bahasa Indonesia",
+          subtitle:
+              "Kamu berhasil presensi untuk mata pelajaran Bahasa Indonesia",
           time: "5 menit lalu",
           icon: Icons.check_circle,
           iconColor: Colors.green,
@@ -126,7 +126,7 @@ class _NotificationScreenState extends State<NotificationScreen>
     );
   }
 
-  //  TAMPILAN TAB: TUGAS 
+  //  TAMPILAN TAB: TUGAS
   Widget _buildTaskNotifications() {
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -149,15 +149,15 @@ class _NotificationScreenState extends State<NotificationScreen>
     );
   }
 
- 
-  //  TAMPILAN TAB: PRESENSI 
+  //  TAMPILAN TAB: PRESENSI
   Widget _buildPresenceNotifications() {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: const [
         NotifCard(
           title: "Presensi Berhasil",
-          subtitle: "Kamu berhasil presensi untuk mata pelajaran Bahasa Indonesia",
+          subtitle:
+              "Kamu berhasil presensi untuk mata pelajaran Bahasa Indonesia",
           time: "5 menit lalu",
           icon: Icons.check_circle,
           iconColor: Colors.green,
@@ -174,7 +174,7 @@ class _NotificationScreenState extends State<NotificationScreen>
   }
 }
 
-// KOMPONEN KARTU 
+// KOMPONEN KARTU
 class NotifCard extends StatelessWidget {
   final String title;
   final String subtitle;

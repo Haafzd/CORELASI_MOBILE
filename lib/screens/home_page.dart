@@ -7,7 +7,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: _bottomNavBar(),
+      bottomNavigationBar: _bottomNavBar(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: Color.fromARGB(255, 0, 46, 110),
                 ),
               ),
 
@@ -73,7 +73,7 @@ class HomePage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue, width: 1.5),
+        border: Border.all(color: Color.fromARGB(255, 0, 46, 110), width: 1.5),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -87,7 +87,7 @@ class HomePage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.blue.shade700,
+              color: Color.fromARGB(255, 0, 46, 110),
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Text(
@@ -121,7 +121,7 @@ class HomePage extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: Color.fromARGB(255, 0, 46, 110),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -138,7 +138,8 @@ class HomePage extends StatelessWidget {
                   },
                 );
               },
-              child: const Text("Lihat Detail  >"),
+              child: const Text("Lihat Detail  >",
+                  style: TextStyle(color: Colors.white)),
             ),
           ),
         ],
@@ -163,12 +164,13 @@ class HomePage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue),
+              border: Border.all(color: Color.fromARGB(255, 0, 46, 110)),
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Text(
               "Akan Datang",
-              style: TextStyle(color: Colors.blue, fontSize: 12),
+              style: TextStyle(
+                  color: Color.fromARGB(255, 0, 46, 110), fontSize: 12),
             ),
           ),
           const SizedBox(height: 12),
@@ -197,8 +199,14 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _bottomNavBar() {
+  Widget _bottomNavBar(BuildContext context) {
     return BottomNavigationBar(
+      onTap: (index) {
+        if (index == 1) {
+          Navigator.pushNamed(context, '/attendance');
+        }
+        //nav lain benatr dlu
+      },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
         BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: ''),
