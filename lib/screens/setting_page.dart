@@ -25,17 +25,19 @@ class _SettingPageState extends State<SettingPage> {
           ),
           title: const Text("Pengaturan")),
       body: Column(
+        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          ProfileCard(),
           const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                "Preferensi",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.start,
-              )),
-
-          // Gunakan Expanded agar isi bisa scroll
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              "Preferensi",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.start,
+            )
+          ),
+          
           Expanded(
             child: ListView(
               children: [
@@ -62,7 +64,7 @@ Widget prefensi(
   Function(bool) onNotifChanged,
   String selectedLang,
   List<String> languages,
-  Function(String) onLangChanged, // callback
+  Function(String) onLangChanged, 
 ) {
   return Column(
     children: <Widget>[
@@ -103,5 +105,35 @@ Widget Logout() {
     onTap: () {
       debugPrint("User logged out");
     },
+  );
+}
+
+Widget ProfileCard() {
+  return Container(
+    margin: const EdgeInsets.all(16),
+    padding: const EdgeInsets.symmetric(vertical: 20),
+    width:double.infinity,
+    decoration: BoxDecoration(
+      color: const Color(0xFF1E5A85), 
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const CircleAvatar(
+          radius: 35,
+          backgroundColor: Colors.grey, 
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          "calon pengguna",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    ),
   );
 }
