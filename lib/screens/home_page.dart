@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _headerSection(),
+              _headerSection(context),
               const SizedBox(height: 20),
 
               const Text(
@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
               ),
 
               const SizedBox(height: 15),
-              _ongoingCard(context), // Sedang berlangsung
+              _ongoingCard(context), // Mapel yg sedang berlangsung
               const SizedBox(height: 15),
 
               _comingCard("Ilmu Pengetahuan Alam"),
@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _headerSection() {
+  Widget _headerSection(BuildContext context) {
     return Row(
       children: [
         const CircleAvatar(
@@ -58,7 +58,13 @@ class HomePage extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        const Icon(Icons.notifications_outlined, size: 28)
+        IconButton(
+          icon: const Icon(Icons.notifications_outlined, size: 28),
+          onPressed: () {
+            Navigator.pushNamed(
+                context, '/notification'); //ini masuk ke page notifikasi
+          },
+        )
       ],
     );
   }
@@ -121,7 +127,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // Nanti disambungkan ke halaman detail
+                // ini nyambung ke halaman detail
                 Navigator.pushNamed(
                   context,
                   '/schedule-detail',
