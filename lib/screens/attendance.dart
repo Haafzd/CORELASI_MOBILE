@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:camera/camera.dart';
+import 'attendance_recap_page.dart';
 
 class Attendance extends StatefulWidget {
   const Attendance({super.key});
@@ -382,6 +383,7 @@ class _AttendanceState extends State<Attendance> {
     );
   }
 
+  //daftarn siswa
   Widget stdnListSection() {
     return Container(
       decoration: BoxDecoration(
@@ -403,17 +405,27 @@ class _AttendanceState extends State<Attendance> {
                       fontSize: 16),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AttendanceRecapScreen(),
+                      ),
+                    );
+                  },
                   child: Row(
                     children: [
-                      Text("Lihat Detail",
-                          style: TextStyle(
-                              color: textDarkBlue,
-                              fontWeight: FontWeight.bold)),
+                      Text(
+                        "Lihat Detail",
+                        style: TextStyle(
+                          color: textDarkBlue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const Icon(Icons.chevron_right, size: 18)
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
