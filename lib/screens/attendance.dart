@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:camera/camera.dart';
 
 class Attendance extends StatefulWidget {
   const Attendance({super.key});
@@ -9,10 +10,13 @@ class Attendance extends StatefulWidget {
 }
 
 class _AttendanceState extends State<Attendance> {
+  CameraController? controller;
+  List<CameraDescription> cameras = [];
+
   final List<Map<String, dynamic>> students = [
     {'name': 'Gilang Tirta Kusuma', 'status': 'Hadir'},
     {'name': 'Nashbilla nurfazza', 'status': 'Hadir'},
-    {'name': 'Khansa aulia fauzah', 'status': 'tidak hadir'},
+    {'name': 'Khansa aulia fauzah', 'status': 'Tidak Hadir'},
     {'name': 'Hafidz Musyafa Azmi', 'status': 'Tidak Hadir'},
     {'name': 'Fadhli Muhammad Dzaki', 'status': 'Hadir'},
     {'name': 'Haafizd alhabib azwir', 'status': 'Tidak Hadir'},
@@ -20,6 +24,161 @@ class _AttendanceState extends State<Attendance> {
 
   final Color primaryBlue = const Color.fromARGB(255, 0, 71, 124);
   final Color textDarkBlue = const Color.fromARGB(255, 0, 46, 110);
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeCameras();
+  }
+
+  Future<void> _initializeCameras() async {
+    cameras = await availableCameras();
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _startCamera(
+      CameraDescription description, StateSetter setState) async {
+    await controller?.dispose();
+    controller = CameraController(
+      description,
+      ResolutionPreset.high,
+      enableAudio: false,
+    );
+    try {
+      await controller!.initialize();
+      if (mounted) setState(() {});
+    } catch (e) {
+      debugPrint("Error inisialisasi kamera: $e");
+    }
+  }
+
+  Widget _buildScannerView() {
+    final c = controller;
+    if (c == null || !c.value.isInitialized) {
+      return Container(
+        height: 300,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 233, 233, 233),
+          borderRadius: BorderRadius.circular(13),
+        ),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.camera_alt_outlined,
+              color: Color.fromARGB(255, 187, 187, 187),
+              size: 80,
+            ),
+            Text(
+              "Arahkan Kamera Ke QR Code",
+              style: TextStyle(
+                color: Color.fromARGB(255, 187, 187, 187),
+                fontSize: 15,
+              ),
+            )
+          ],
+        ),
+      );
+    } else {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(13),
+        child: AspectRatio(
+          aspectRatio: c.value.aspectRatio,
+          child: CameraPreview(c),
+        ),
+      );
+    }
+  }
+
+  void scannerDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (context, dialogSetState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Scan QR Code Siswa",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: textDarkBlue,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    SizedBox(
+                      width: double.infinity,
+                      child: _buildScannerView(),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          if (cameras.isNotEmpty) {
+                            final backCamera = cameras.firstWhere(
+                              (cam) =>
+                                  cam.lensDirection == CameraLensDirection.back,
+                              orElse: () => cameras.first,
+                            );
+                            await _startCamera(backCamera, dialogSetState);
+                          } else {
+                            debugPrint("Tidak ada kamera ditemukan!");
+                          }
+                        },
+                        icon: const Icon(Icons.camera_alt, color: Colors.white),
+                        label: const Text(
+                          "Mulai Scan",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryBlue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    ).then((_) {
+      controller?.dispose();
+      controller = null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +219,7 @@ class _AttendanceState extends State<Attendance> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: scannerDialog,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryBlue,
                     shape: RoundedRectangleBorder(
@@ -88,7 +247,7 @@ class _AttendanceState extends State<Attendance> {
 
   Widget buildHeader() {
     final String liveDate =
-        DateFormat('EEEE, dd MMMM yyyy').format(DateTime.now());
+        DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(DateTime.now());
     return Row(
       children: [
         const BackButton(),
@@ -104,8 +263,8 @@ class _AttendanceState extends State<Attendance> {
                   fontWeight: FontWeight.bold),
             ),
             Text(
-              "${liveDate}",
-              style: TextStyle(
+              liveDate,
+              style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 14,
                   fontWeight: FontWeight.w500),
@@ -199,7 +358,6 @@ class _AttendanceState extends State<Attendance> {
     );
   }
 
-  //rekap
   Widget sumBox(String count, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -224,7 +382,6 @@ class _AttendanceState extends State<Attendance> {
     );
   }
 
-//daftarn sswa
   Widget stdnListSection() {
     return Container(
       decoration: BoxDecoration(
