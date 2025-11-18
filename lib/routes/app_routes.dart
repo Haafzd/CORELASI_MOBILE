@@ -14,6 +14,6 @@ class AppRoutes {
     editAccount: (context) => const SettingPage(),
     attendance: (context) => const Attendance(),
     home: (context) => const HomePage(),
-    notification: (context) => const NotificationsPage(),
+    notification: (context) => const NotificationScreen(),
   };
 }
