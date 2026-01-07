@@ -1,178 +1,209 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../color.dart';
+import '../services/api_service.dart';
 
-class AttendanceRecapScreen extends StatelessWidget {
-  AttendanceRecapScreen({super.key});
+class AttendanceRecapScreen extends StatefulWidget {
+  final String sessionId;
 
-  // dummy data siswa
-  final List<Map<String, String>> students = [
-  {'name': 'Hafidz Musyafa Azmi', 'status': 'Tidak hadir'}, 
-  {'name': 'Gilang Tirta Kusuma', 'status': 'Hadir'},       
-  {'name': 'Fadli Muhammad Dzaky', 'status': 'Hadir'},      
-  {'name': 'Haafidz Alhabib Azwir', 'status': 'Hadir'},     
-  {'name': 'Muhammad Thoriq Marcello', 'status': 'Hadir'},  
-  {'name': 'Muhammad Reza Ferdinal', 'status': 'Hadir'},    
-  {'name': 'Pieter Immanuel Sinaga', 'status': 'Hadir'},    
-  {'name': 'Muhammad Ilham Ridzuan', 'status': 'Hadir'},    
-  {'name': 'Avriela Nada Amara P', 'status': 'Hadir'},      
-  {'name': 'Nadya Sekar Rahmawati', 'status': 'Hadir'},     
-  {'name': 'Kyreina Oktaria Putri', 'status': 'Hadir'},     
-  {'name': 'Alfian Rizky Sabian', 'status': 'Hadir'},       
-  {'name': 'Raihan Ahmad Fadhilah', 'status': 'Hadir'},     
-  {'name': 'Salsabila Nur Azzahra', 'status': 'Hadir'},     
-  {'name': 'Iqbal Faqih Ramadhan', 'status': 'Hadir'},      
-  {'name': 'Farrel Dwi Pratama', 'status': 'Hadir'},        
-  {'name': 'Dinda Maharani Putri', 'status': 'Hadir'},      
-  {'name': 'Zahra Khairunnisa', 'status': 'Hadir'},        
-  {'name': 'Rafli Maulana Akbar', 'status': 'Hadir'},       
-  {'name': 'Bella Citra Ayuningtyas', 'status': 'Hadir'},   
-  {'name': 'Rizky Ananda Putra', 'status': 'Hadir'},        
-  {'name': 'Azka Rafi Alamsyah', 'status': 'Hadir'},        
-  {'name': 'Putri Aulia Rahma', 'status': 'Hadir'},         
-  {'name': 'Noval Dwi Kusuma', 'status': 'Hadir'},          
-  {'name': 'Silvia Agustin', 'status': 'Hadir'},            
-];
+  const AttendanceRecapScreen({super.key, required this.sessionId});
 
+  @override
+  State<AttendanceRecapScreen> createState() => _AttendanceRecapScreenState();
+}
+
+class _AttendanceRecapScreenState extends State<AttendanceRecapScreen> {
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  // Data
+  List<dynamic> _students = [];
+  int _total = 0;
+  int _hadir = 0;
+  int _tidakHadir = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final data = await ApiService.getSessionData(widget.sessionId);
+      final students = data['students'] ?? [];
+
+      setState(() {
+        _students = students;
+        _total = students.length;
+        _hadir = students
+            .where((s) => s['status'].toString().toLowerCase() == 'hadir')
+            .length;
+        _tidakHadir = _total - _hadir;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = e.toString();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final dateStr =
+        DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(DateTime.now());
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: const BackButton(),
+        leading: const BackButton(color: Colors.black),
         title: Text(
           'Rekap Absensi',
           style: TextStyle(
-            color: AppColors.textDarkBlue,
-            fontWeight: FontWeight.w600,
-          ),
+              color: AppColors.textDarkBlue,
+              fontWeight: FontWeight.bold,
+              fontSize: 20),
         ),
+        centerTitle: false,
+        titleSpacing: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // tanggal
-            const Text(
-              'Selasa , 04 Maret 2025',
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // judul + 3 kotak rekap
-            Text(
-              'Rekap Presensi Kehadiran Siswa',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textDarkBlue,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: const [
-                _SummaryBox(label: 'Total', value: '25'),
-                SizedBox(width: 8),
-                _SummaryBox(label: 'Hadir', value: '24'),
-                SizedBox(width: 8),
-                _SummaryBox(label: 'tidak hadir', value: '1'),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // BOX: Daftar siswa + list
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // header "Daftar Siswa" DI DALAM box
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      child: Text(
-                        'Daftar Siswa',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textDarkBlue,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _errorMessage != null
+              ? Center(child: Text("Gagal memuat data: $_errorMessage"))
+              : RefreshIndicator(
+                  onRefresh: _loadData,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10), // Reduced top padding
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          dateStr,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ),
-                    Divider(height: 1, color: Colors.grey.shade300),
+                        const SizedBox(height: 20),
 
-                    // list siswa
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: students.length,
-                        separatorBuilder: (_, __) => Divider(
-                          height: 1,
-                          color: Colors.grey.shade200,
+                        Text(
+                          'Rekap Presensi Kehadiran Siswa',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDarkBlue,
+                          ),
                         ),
-                        itemBuilder: (context, index) {
-                          final student = students[index];
-                          final isPresent = student['status']!
-                                  .toLowerCase()
-                                  .contains('hadir') &&
-                              !student['status']!
-                                  .toLowerCase()
-                                  .contains('tidak');
+                        const SizedBox(height: 15),
 
-                          return Container(
-                            color: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    student['name']!,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                        // Summary Cards
+                        Row(
+                          children: [
+                            _SummaryBox(label: 'Total', value: '$_total'),
+                            const SizedBox(width: 12),
+                            _SummaryBox(label: 'Hadir', value: '$_hadir'),
+                            const SizedBox(width: 12),
+                            _SummaryBox(
+                                label: 'Tidak hadir', value: '$_tidakHadir'),
+                          ],
+                        ),
+                        const SizedBox(height: 25),
+
+                        // List Container
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: Colors.grey.shade300),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.03),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4))
+                              ]),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Text(
+                                  'Daftar Siswa',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textDarkBlue,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
-                                _StatusChip(
-                                  isPresent: isPresent,
-                                  primaryBlue: AppColors.primaryBlue,
-                                  textDarkBlue: AppColors.textDarkBlue,
+                              ),
+                              const Divider(height: 1, thickness: 1),
+                              if (_students.isEmpty)
+                                const Padding(
+                                    padding: EdgeInsets.all(20),
+                                    child: Center(
+                                        child: Text("Tidak ada data siswa")))
+                              else
+                                ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  itemCount: _students.length,
+                                  separatorBuilder: (_, __) =>
+                                      const Divider(height: 1),
+                                  itemBuilder: (context, index) {
+                                    final student = _students[index];
+                                    final isPresent = student['status']
+                                            .toString()
+                                            .toLowerCase() ==
+                                        'hadir';
+
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 12),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              student['name'] ?? 'Siswa',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                  color:
+                                                      AppColors.textDarkBlue),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          _StatusButton(isPresent: isPresent),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
 
-/// Kotak kecil: Total / Hadir / tidak hadir
 class _SummaryBox extends StatelessWidget {
   final String label;
   final String value;
@@ -183,27 +214,29 @@ class _SummaryBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        height: 100,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade300),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDarkBlue),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 11,
-                color: Colors.grey,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
               ),
             ),
           ],
@@ -213,38 +246,28 @@ class _SummaryBox extends StatelessWidget {
   }
 }
 
-/// Chip Hadir / Tidak hadir persegi tumpul kecil
-class _StatusChip extends StatelessWidget {
+class _StatusButton extends StatelessWidget {
   final bool isPresent;
-  final Color primaryBlue;
-  final Color textDarkBlue;
 
-  const _StatusChip({
-    required this.isPresent,
-    required this.primaryBlue,
-    required this.textDarkBlue,
-  });
+  const _StatusButton({required this.isPresent});
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = isPresent ? primaryBlue : Colors.white;
-    final borderColor = isPresent ? primaryBlue : textDarkBlue;
-    final textColor = isPresent ? Colors.white : textDarkBlue;
-    final label = isPresent ? 'Hadir' : 'Tidak hadir';
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      width: 100,
+      padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(4), 
-        border: Border.all(color: borderColor),
+        color: isPresent ? AppColors.primaryBlue : Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.primaryBlue, width: 1.5),
       ),
+      alignment: Alignment.center,
       child: Text(
-        label,
+        isPresent ? 'Hadir' : 'Tidak hadir',
         style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: textColor,
+          color: isPresent ? Colors.white : AppColors.primaryBlue,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
