@@ -35,6 +35,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     // Brand Colors
+<<<<<<< HEAD
+=======
+    final primaryBlue = const Color.fromARGB(255, 0, 71, 124);
+>>>>>>> 2a093b206b760307949ecae6cdb13d6f4a770c20
     final textDarkBlue = const Color.fromARGB(255, 0, 46, 110);
 
     return Scaffold(
