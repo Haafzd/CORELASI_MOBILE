@@ -17,11 +17,8 @@ class AppRoutes {
   static const String profile = '/profile';
 
   static Map<String, WidgetBuilder> routes = {
-<<<<<<< HEAD
+
     login: (context) => const LoginPage(),
-=======
-    profilePage: (context) => const ProfilePage(),
->>>>>>> 2a093b206b760307949ecae6cdb13d6f4a770c20
     attendance: (context) => const Attendance(),
     home: (context) => const HomePage(),
     bap: (context) => const BapPage(),
